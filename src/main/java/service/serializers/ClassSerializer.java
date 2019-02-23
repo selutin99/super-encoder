@@ -15,35 +15,40 @@ import java.util.Collection;
 
 public interface ClassSerializer<T> extends Serializer<T, T> {
 
-    static <T> ClassSerializer<T> of(final Class<T> clazz) {
+    static <T> ClassSerializer<T> of(Class<T> inputClass) {
         try {
-            Constructor<T> constructor = clazz.getConstructor();
+            Constructor<T> constructor = inputClass.getConstructor();
             Collection<Serializer> serializers = new ArrayList<>();
-            detectFields(clazz, serializers);
-            if (serializers.size() > 0)
+            detectFields(inputClass, serializers);
+            if (serializers.size() > 0) {
                 return new RootSerializer(constructor, serializers);
-        } catch (NoSuchMethodException e) {
+            }
+        }
+        catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        if (Serializable.class.isAssignableFrom(clazz))
-            return new SerializableExternalizer<>(clazz);
-        throw new SerializeException("Не поддерживается сериализация: " + clazz);
+        if (Serializable.class.isAssignableFrom(inputClass)) {
+            return new SerializableSerializer<>(inputClass);
+        }
+        throw new SerializeException("Не поддерживается сериализация: " + inputClass);
     }
 
-    static void detectFields(Class<?> clazz, Collection<Serializer> serializers) {
-        if (clazz == null)
+    static void detectFields(Class<?> inputClass, Collection<Serializer> serializers) {
+        if (inputClass == null) {
             return;
-        Field[] fields = clazz.getDeclaredFields();
+        }
+        Field[] fields = inputClass.getDeclaredFields();
         for (Field field : fields) {
             Class<?> cl = field.getType();
             int modifier = field.getModifiers();
-            if (Modifier.isStatic(modifier) || Modifier.isTransient(modifier))
+            if (Modifier.isStatic(modifier) || Modifier.isTransient(modifier)) {
                 continue;
+            }
             field.setAccessible(true);
             Serializer fieldExt = Serializer.of(field, cl);
             serializers.add(fieldExt);
         }
-        detectFields(clazz.getSuperclass(), serializers);
+        detectFields(inputClass.getSuperclass(), serializers);
     }
 
     final class RootSerializer<T> implements ClassSerializer<T> {
@@ -57,48 +62,48 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
-            for (final Serializer serializer : serializers)
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
+            for (Serializer serializer : serializers) {
                 serializer.writeSerializer(object, out);
+            }
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
-            for (final Serializer serializer : serializers)
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
+            for (Serializer serializer : serializers) {
                 serializer.readSerializer(object, in);
+            }
         }
 
         @Override
-        final public T readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
+        final public T readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
             T object = constructor.newInstance();
             readSerializer(object, in);
             return object;
         }
     }
 
-    final class SerializableExternalizer<T> implements ClassSerializer<T> {
+    final class SerializableSerializer<T> implements ClassSerializer<T> {
 
-        private Class<T> clazz;
+        private Class<T> inputClass;
 
-        private SerializableExternalizer(Class<T> clazz) {
-            this.clazz = clazz;
+        private SerializableSerializer(Class<T> clazz) {
+            this.inputClass = clazz;
         }
 
         @Override
-        public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeObject(object);
-            } else
+            } else {
                 out.writeBoolean(false);
+            }
         }
 
         @Override
         public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
-            throw new SerializeException("Не могу прочитать из " + clazz);
+            throw new SerializeException("Не могу прочитать из " + inputClass);
         }
 
         @Override

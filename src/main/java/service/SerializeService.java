@@ -3,9 +3,10 @@ package service;
 import contracts.Serializer;
 import contracts.SuperEncoder;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class SerializeService implements SuperEncoder {
@@ -20,12 +21,13 @@ public class SerializeService implements SuperEncoder {
         if (anyBean != null) {
             Serializer serializer = of(anyBean.getClass());
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            try (final GZIPOutputStream compressed = new GZIPOutputStream(output)) {
-                try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
+            try (GZIPOutputStream compressed = new GZIPOutputStream(output)) {
+                try (ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
                     serializer.writeSerializer(anyBean, objected);
                     return output.toByteArray();
                 }
-            } catch (IOException | ReflectiveOperationException e) {
+            }
+            catch (IOException | ReflectiveOperationException e) {
                 e.printStackTrace();
             }
         } else {
@@ -34,23 +36,8 @@ public class SerializeService implements SuperEncoder {
         return null;
     }
 
-
-    public Object deserialize(byte[] data) {
-        if (data != null) {
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                 ObjectInput in = new ObjectInputStream(bis)) {
-                final Serializer serializer = of(in.readObject().getClass());
-                try (final GZIPInputStream compressed = new GZIPInputStream(bis)) {
-                    try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
-                        return serializer.readObject(objected);
-                    }
-                }
-            } catch (IOException | ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new NullPointerException();
-        }
+    @Override
+    public Object deserialize(byte[] data, int a) {
         return null;
     }
 }

@@ -11,24 +11,31 @@ public interface Serializer<T, V> {
 
     static <T, V> Serializer<T, V> of(Class<? extends T> inputClass) {
         Serializer<T, V> serializer;
-        if ((serializer = LangExternalizer.lang(inputClass)) != null)
+        /*if ((serializer = LangExternalizer.lang(inputClass)) != null) {
             return serializer;
-        if ((serializer = TimeExternalizer.time(inputClass)) != null)
+        }*/
+        if ((serializer = TimeSerializer.time(inputClass)) != null) {
             return serializer;
-        return (Serializer<T, V>) ClassExternalizer.of(inputClass);
+        }
+        return (Serializer<T, V>) ClassSerializer.of(inputClass);
     }
 
     static <T, V> Serializer<T, V> of(Field field, Class<? extends T> inputClass) {
         Serializer<T, V> serializer;
-        if (inputClass.isPrimitive())
-            if ((serializer = (Serializer<T, V>) PrimitiveSerializer.primitive(field, inputClass)) != null)
+        if (inputClass.isPrimitive()) {
+            if ((serializer = (Serializer<T, V>) PrimitiveSerializer.primitive(field, inputClass)) != null) {
                 return serializer;
-        if ((serializer = (Serializer<T, V>) CollectionExternalizer.collection(field, inputClass)) != null)
+            }
+        }
+        /*if ((serializer = (Serializer<T, V>) CollectionExternalizer.collection(field, inputClass)) != null){
             return serializer;
-        if ((serializer = (Serializer<T, V>) LangExternalizer.lang(field, inputClass)) != null)
+        }
+        if ((serializer = (Serializer<T, V>) LangExternalizer.lang(field, inputClass)) != null) {
             return serializer;
-        if ((serializer = (Serializer<T, V>) TimeExternalizer.time(field, inputClass)) != null)
+        }*/
+        if ((serializer = (Serializer<T, V>) TimeSerializer.time(field, inputClass)) != null) {
             return serializer;
+        }
         return new FieldSerializer.FieldParentSerializer(field, ClassSerializer.of(inputClass));
     }
 

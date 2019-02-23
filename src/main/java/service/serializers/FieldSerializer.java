@@ -19,7 +19,7 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
     }
 
     final static Class<?> getGenericClass(Field field, int pos) {
-        final ParameterizedType paramTypes = (ParameterizedType) field.getGenericType();
+        ParameterizedType paramTypes = (ParameterizedType) field.getGenericType();
         return (Class<?>) paramTypes.getActualTypeArguments()[pos];
     }
 
@@ -29,18 +29,15 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
             super(field);
         }
 
-        protected abstract void writeValue(V value, ObjectOutput out)
-                throws IOException, ReflectiveOperationException;
+        protected abstract void writeValue(V value, ObjectOutput out) throws IOException, ReflectiveOperationException;
 
         @Override
-        public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.set(object, readObject(in));
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             V value = (V) field.get(object);
             if (value == null) {
                 out.writeBoolean(false);
@@ -66,8 +63,7 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
         }
 
         @Override
-        final protected void writeValue(V value, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final protected void writeValue(V value, ObjectOutput out) throws IOException, ReflectiveOperationException {
             serializer.writeSerializer(value, out);
         }
     }
@@ -76,12 +72,12 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
 
         protected Constructor<? extends C> constructor;
 
-        protected FieldConstructorSerializer(Field field, Class<? extends C> clazz) {
+        protected FieldConstructorSerializer(Field field, Class<? extends C> inputClass) {
             super(field);
             try {
-                constructor = clazz.getConstructor();
+                constructor = inputClass.getConstructor();
             } catch (NoSuchMethodException e) {
-                throw new SerializeException("Не пустой конструктор для типа " + clazz);
+                throw new SerializeException("Не пустой конструктор для типа " + inputClass);
             }
         }
 

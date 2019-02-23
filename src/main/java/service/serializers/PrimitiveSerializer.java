@@ -11,27 +11,35 @@ import java.lang.reflect.Field;
 public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
 
     static <T, V> PrimitiveSerializer<T, V> primitive(Field field, Class<T> inputClass) {
-        if (Integer.TYPE.equals(inputClass))
+        if (Integer.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldIntegerSerializer(field);
-        if (Short.TYPE.equals(inputClass))
+        }
+        if (Short.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldShortSerializer(field);
-        if (Long.TYPE.equals(inputClass))
+        }
+        if (Long.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldLongSerializer(field);
-        if (Float.TYPE.equals(inputClass))
+        }
+        if (Float.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldFloatSerializer(field);
-        if (Double.TYPE.equals(inputClass))
+        }
+        if (Double.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldDoubleSerializer(field);
-        if (Boolean.TYPE.equals(inputClass))
+        }
+        if (Boolean.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldBooleanSerializer(field);
-        if (Byte.TYPE.equals(inputClass))
+        }
+        if (Byte.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldByteSerializer(field);
-        if (Character.TYPE.equals(inputClass))
+        }
+        if (Character.TYPE.equals(inputClass)) {
             return (PrimitiveSerializer<T, V>) new FieldCharSerializer(field);
+        }
         return null;
     }
 
-    abstract class FieldPrimitiveSerializer<T, V> extends FieldSerializer<T, V>
-            implements PrimitiveSerializer<T, V> {
+    abstract class FieldPrimitiveSerializer<T, V> extends FieldSerializer<T, V> implements PrimitiveSerializer<T, V> {
+
         protected FieldPrimitiveSerializer(Field field) {
             super(field);
         }
@@ -49,14 +57,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeInt(field.getInt(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setInt(object, in.readInt());
         }
 
@@ -69,14 +75,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeLong(field.getLong(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setLong(object, in.readLong());
         }
 
@@ -89,14 +93,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeShort(field.getShort(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setShort(object, in.readShort());
         }
 
@@ -109,14 +111,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeFloat(field.getFloat(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setFloat(object, in.readFloat());
         }
 
@@ -129,14 +129,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeDouble(field.getDouble(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setDouble(object, in.readDouble());
         }
 
@@ -149,14 +147,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeByte(field.getByte(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setByte(object, in.readByte());
         }
 
@@ -169,14 +165,12 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeChar(field.getChar(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setChar(object, in.readChar());
         }
 
@@ -189,16 +183,14 @@ public interface PrimitiveSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             out.writeBoolean(field.getBoolean(object));
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in)
-                throws IOException, ReflectiveOperationException {
+        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             field.setBoolean(object, in.readBoolean());
         }
-
     }
+
 }
