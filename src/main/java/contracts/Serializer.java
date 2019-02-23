@@ -1,4 +1,6 @@
-package dao;
+package contracts;
+
+import service.serializers.*;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -19,10 +21,7 @@ public interface Serializer<T, V> {
     static <T, V> Serializer<T, V> of(Field field, Class<? extends T> inputClass) {
         Serializer<T, V> serializer;
         if (inputClass.isPrimitive())
-            if ((serializer = (Serializer<T, V>) PrimitiveExternalizer.primitive(field, inputClass)) != null)
-                return serializer;
-        if (inputClass.isArray())
-            if ((serializer = (Serializer<T, V>) ArrayExternalizer.array(field, inputClass)) != null)
+            if ((serializer = (Serializer<T, V>) PrimitiveSerializer.primitive(field, inputClass)) != null)
                 return serializer;
         if ((serializer = (Serializer<T, V>) CollectionExternalizer.collection(field, inputClass)) != null)
             return serializer;
@@ -30,10 +29,12 @@ public interface Serializer<T, V> {
             return serializer;
         if ((serializer = (Serializer<T, V>) TimeExternalizer.time(field, inputClass)) != null)
             return serializer;
-        return new FieldExternalizer.FieldParentExternalizer(field, ClassExternalizer.of(inputClass));
+        return new FieldSerializer.FieldParentSerializer(field, ClassSerializer.of(inputClass));
     }
 
-    void writeObject(T object, ObjectOutput out) throws IOException;
+    void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException;
 
-    V readObject(ObjectInput in) throws IOException;
+    void readSerializer(final T object, final ObjectInput in) throws IOException, ReflectiveOperationException;
+
+    V readObject(ObjectInput in) throws IOException, ReflectiveOperationException;
 }

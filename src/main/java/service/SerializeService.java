@@ -1,12 +1,11 @@
 package service;
 
-import dao.Serializer;
-import dao.SuperEncoder;
+import contracts.Serializer;
+import contracts.SuperEncoder;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class SerializeService implements SuperEncoder {
@@ -18,26 +17,40 @@ public class SerializeService implements SuperEncoder {
     }
 
     public byte[] serialize(Object anyBean) {
-        if(anyBean!=null){
+        if (anyBean != null) {
             Serializer serializer = of(anyBean.getClass());
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             try (final GZIPOutputStream compressed = new GZIPOutputStream(output)) {
                 try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
-                    serializer.writeObject(anyBean, objected);
+                    serializer.writeSerializer(anyBean, objected);
                     return output.toByteArray();
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException | ReflectiveOperationException e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             throw new NullPointerException();
         }
         return null;
     }
 
+
     public Object deserialize(byte[] data) {
+        if (data != null) {
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                 ObjectInput in = new ObjectInputStream(bis)) {
+                final Serializer serializer = of(in.readObject().getClass());
+                try (final GZIPInputStream compressed = new GZIPInputStream(bis)) {
+                    try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
+                        return serializer.readObject(objected);
+                    }
+                }
+            } catch (IOException | ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new NullPointerException();
+        }
         return null;
     }
 }

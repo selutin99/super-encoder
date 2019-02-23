@@ -1,4 +1,4 @@
-package dao;
+package contracts;
 
 public interface SuperEncoder {
     byte[] serialize(Object anyBean);
