@@ -11,9 +11,9 @@ public interface Serializer<T, V> {
 
     static <T, V> Serializer<T, V> of(Class<? extends T> inputClass) {
         Serializer<T, V> serializer;
-        /*if ((serializer = LangExternalizer.lang(inputClass)) != null) {
+        if ((serializer = LangSerializer.lang(inputClass)) != null) {
             return serializer;
-        }*/
+        }
         if ((serializer = TimeSerializer.time(inputClass)) != null) {
             return serializer;
         }
@@ -29,10 +29,10 @@ public interface Serializer<T, V> {
         }
         /*if ((serializer = (Serializer<T, V>) CollectionExternalizer.collection(field, inputClass)) != null){
             return serializer;
-        }
-        if ((serializer = (Serializer<T, V>) LangExternalizer.lang(field, inputClass)) != null) {
-            return serializer;
         }*/
+        if ((serializer = (Serializer<T, V>) LangSerializer.lang(field, inputClass)) != null) {
+            return serializer;
+        }
         if ((serializer = (Serializer<T, V>) TimeSerializer.time(field, inputClass)) != null) {
             return serializer;
         }

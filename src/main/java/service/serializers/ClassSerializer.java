@@ -30,7 +30,7 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
         if (Serializable.class.isAssignableFrom(inputClass)) {
             return new SerializableSerializer<>(inputClass);
         }
-        throw new SerializeException("Не поддерживается сериализация: " + inputClass);
+        throw new SerializeException("Нужен явный конструктор по умолчанию. Не поддерживается сериализация: " + inputClass);
     }
 
     static void detectFields(Class<?> inputClass, Collection<Serializer> serializers) {

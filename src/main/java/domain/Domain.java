@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Domain {
     public static void main(String[] args) throws IOException {
         MyClass object = new MyClass();
-        object.setA(54);
+        object.setA("test");
         object.setB(2L);
 
         byte[] bytes;
@@ -15,23 +15,23 @@ public class Domain {
         SerializeService service = new SerializeService();
         bytes = service.serialize(object);
 
-        //System.out.println(bytes);
+
     }
 }
 
 class MyClass{
-    private int a;
+    private String a;
     private long b;
 
     public MyClass(){
 
     }
 
-    public int getA() {
+    public String getA() {
         return a;
     }
 
-    public void setA(int a) {
+    public void setA(String a) {
         this.a = a;
     }
 

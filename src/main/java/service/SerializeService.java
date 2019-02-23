@@ -26,8 +26,7 @@ public class SerializeService implements SuperEncoder {
                     serializer.writeSerializer(anyBean, objected);
                     return output.toByteArray();
                 }
-            }
-            catch (IOException | ReflectiveOperationException e) {
+            } catch (IOException | ReflectiveOperationException e) {
                 e.printStackTrace();
             }
         } else {
@@ -37,7 +36,13 @@ public class SerializeService implements SuperEncoder {
     }
 
     @Override
-    public Object deserialize(byte[] data, int a) {
+    public Object deserialize(byte[] data) {
+        if (data != null) {
+
+        }
+        else{
+            throw new NullPointerException();
+        }
         return null;
     }
 }

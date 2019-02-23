@@ -2,5 +2,5 @@ package contracts;
 
 public interface SuperEncoder {
     byte[] serialize(Object anyBean);
-    Object deserialize(byte[] data, int a);
+    Object deserialize(byte[] data);
 }

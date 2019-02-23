@@ -77,7 +77,7 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
             try {
                 constructor = inputClass.getConstructor();
             } catch (NoSuchMethodException e) {
-                throw new SerializeException("Не пустой конструктор для типа " + inputClass);
+                throw new SerializeException("Нет конструктора по умолчанию для поля " + inputClass);
             }
         }
 
