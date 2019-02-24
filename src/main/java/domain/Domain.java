@@ -2,44 +2,33 @@ package domain;
 
 import service.SerializeService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class Domain {
     public static void main(String[] args) throws IOException {
         MyClass object = new MyClass();
-        object.setA("test");
+        object.setA(23);
         object.setB(2L);
 
-        byte[] bytes;
+        byte[] bytes = null;
 
-        SerializeService service = new SerializeService();
-        bytes = service.serialize(object);
+        //SerializeService service = new SerializeService();
+        //bytes = service.serialize(object);
 
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            SerializeService.serializeRaw(object, output);
+            bytes = output.toByteArray();
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
 
-    }
-}
-
-class MyClass{
-    private String a;
-    private long b;
-
-    public MyClass(){
-
-    }
-
-    public String getA() {
-        return a;
-    }
-
-    public void setA(String a) {
-        this.a = a;
-    }
-
-    public long getB() {
-        return b;
-    }
-
-    public void setB(long b) {
-        this.b = b;
+        try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+            MyClass obj = SerializeService.deserializeRaw(input, MyClass.class);
+            System.out.println(obj.getA());
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 }

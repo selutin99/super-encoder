@@ -62,21 +62,21 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
+        public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             for (Serializer serializer : serializers) {
                 serializer.writeSerializer(object, out);
             }
         }
 
         @Override
-        final public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
+        public void readSerializer(T object, ObjectInput in) throws IOException, ReflectiveOperationException {
             for (Serializer serializer : serializers) {
                 serializer.readSerializer(object, in);
             }
         }
 
         @Override
-        final public T readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
+        public T readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
             T object = constructor.newInstance();
             readSerializer(object, in);
             return object;

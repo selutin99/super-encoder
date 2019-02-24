@@ -32,10 +32,10 @@ public interface TimeSerializer<T, V> extends Serializer<T, V> {
 
     final class InstantSerializer implements TimeSerializer<Instant, Instant> {
 
-        final static InstantSerializer INSTANCE = new InstantSerializer();
+        static InstantSerializer INSTANCE = new InstantSerializer();
 
         @Override
-        final public void writeSerializer(Instant object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Instant object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeLong(object.getEpochSecond());
@@ -46,7 +46,7 @@ public interface TimeSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public Instant readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public Instant readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? Instant.ofEpochSecond(in.readLong(), in.readInt()) : null;
         }
     }

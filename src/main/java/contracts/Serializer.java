@@ -27,9 +27,9 @@ public interface Serializer<T, V> {
                 return serializer;
             }
         }
-        /*if ((serializer = (Serializer<T, V>) CollectionExternalizer.collection(field, inputClass)) != null){
+        if ((serializer = (Serializer<T, V>) CollectionSerializer.collection(field, inputClass)) != null){
             return serializer;
-        }*/
+        }
         if ((serializer = (Serializer<T, V>) LangSerializer.lang(field, inputClass)) != null) {
             return serializer;
         }
