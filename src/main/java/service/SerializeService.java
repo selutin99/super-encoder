@@ -8,62 +8,66 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SerializeService implements SuperEncoder {
 
+    private Class inputClass;
     private static ConcurrentHashMap<Class<?>, Serializer> externalizerMap = new ConcurrentHashMap();
 
-    public static <T> Serializer<T, T> of(Class<T> inputClass) {
+    public SerializeService(Class inputClass){
+        this.inputClass = inputClass;
+    }
+
+    public Class getInputClass() {
+        return inputClass;
+    }
+
+    public void setInputClass(Class inputClass) {
+        this.inputClass = inputClass;
+    }
+
+    private static <T> Serializer<T, T> of(Class<T> inputClass) {
         return externalizerMap.computeIfAbsent(inputClass, aClass -> Serializer.of(aClass));
     }
 
     public byte[] serialize(Object anyBean) {
-        if (anyBean != null) {
-
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            Serializer serializer = of(anyBean.getClass());
-
-            try (ObjectOutputStream objected = new ObjectOutputStream(output)) {
-                serializer.writeSerializer(anyBean, objected);
-                return output.toByteArray();
-            }
-            catch (IOException | ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new NullPointerException();
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            this.serialize(anyBean, output);
+            return output.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     @Override
     public Object deserialize(byte[] data) {
-        if (data != null) {
-            ByteArrayInputStream input = new ByteArrayInputStream(data);
-            try {
-                ObjectInputStream is = new ObjectInputStream(input);
-                Serializer serializer = of(is.readObject().getClass());
-                return serializer.readObject(is);
-            }
-            catch(IOException | ReflectiveOperationException e){
-                e.printStackTrace();
-            }
-        }
-        else{
-            throw new NullPointerException();
+        try (ByteArrayInputStream input = new ByteArrayInputStream(data)) {
+            return this.deserialize(input, getInputClass());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public static final void serializeRaw(final Object object, final OutputStream output) throws IOException, ReflectiveOperationException {
-        final Serializer serializer = of(object.getClass());
-        try (final ObjectOutputStream objected = new ObjectOutputStream(output)) {
-            serializer.writeSerializer(object, objected);
+
+    private void serialize(Object object, OutputStream output) {
+        Serializer serializer = of(object.getClass());
+        try {
+            try (ObjectOutputStream objected = new ObjectOutputStream(output)) {
+                serializer.writeSerializer(object, objected);
+            }
+        } catch (IOException | ReflectiveOperationException e) {
+            e.printStackTrace();
         }
     }
 
-    public static final <T> T deserializeRaw(final InputStream input, final Class<T> clazz)
-            throws IOException, ReflectiveOperationException {
-        final Serializer<T, T> serializer = of(clazz);
-        try (final ObjectInputStream objected = new ObjectInputStream(input)) {
-            return serializer.readObject(objected);
+    private <T> T deserialize(InputStream input, Class<T> clazz) {
+        Serializer<T, T> serializer = of(getInputClass());
+        try {
+            try (ObjectInputStream objected = new ObjectInputStream(input)) {
+                return serializer.readObject(objected);
+            }
+        } catch (IOException | ReflectiveOperationException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 }

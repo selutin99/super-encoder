@@ -2,9 +2,8 @@ package domain;
 
 import service.SerializeService;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Domain {
     public static void main(String[] args) throws IOException {
@@ -14,21 +13,13 @@ public class Domain {
 
         byte[] bytes = null;
 
-        //SerializeService service = new SerializeService();
-        //bytes = service.serialize(object);
+        SerializeService service = new SerializeService(MyClass.class);
 
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-            SerializeService.serializeRaw(object, output);
-            bytes = output.toByteArray();
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
+        bytes = service.serialize(object);
 
-        try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
-            MyClass obj = SerializeService.deserializeRaw(input, MyClass.class);
-            System.out.println(obj.getA());
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
+        System.out.println(Arrays.toString(bytes));
+
+        MyClass obj = (MyClass) service.deserialize(bytes);
+        System.out.println(obj.getA() + " " + obj.getB());
     }
 }
