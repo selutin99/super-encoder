@@ -1,6 +1,8 @@
 # SuperEncoder
 Specification for ExactPro. Custom serializer via Java.
 
+## Usage
+
 ```java
 //JavaBean
 MyClass object = new MyClass();
