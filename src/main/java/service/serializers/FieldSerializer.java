@@ -18,7 +18,7 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
         this.field = field;
     }
 
-    final static Class<?> getGenericClass(Field field, int pos) {
+    static Class<?> getGenericClass(Field field, int pos) {
         ParameterizedType paramTypes = (ParameterizedType) field.getGenericType();
         return (Class<?>) paramTypes.getActualTypeArguments()[pos];
     }
@@ -37,7 +37,7 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
         }
 
         @Override
-        final public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
+        public void writeSerializer(T object, ObjectOutput out) throws IOException, ReflectiveOperationException {
             V value = (V) field.get(object);
             if (value == null) {
                 out.writeBoolean(false);
@@ -58,12 +58,12 @@ public abstract class FieldSerializer<T, V> implements Serializer<T, V> {
         }
 
         @Override
-        final public V readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
+        public V readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
             return in.readBoolean() ? serializer.readObject(in) : null;
         }
 
         @Override
-        final protected void writeValue(V value, ObjectOutput out) throws IOException, ReflectiveOperationException {
+        protected void writeValue(V value, ObjectOutput out) throws IOException, ReflectiveOperationException {
             serializer.writeSerializer(value, out);
         }
     }

@@ -30,7 +30,17 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
         if (Serializable.class.isAssignableFrom(inputClass)) {
             return new SerializableSerializer<>(inputClass);
         }
-        throw new SerializeException("Нужен явный конструктор по умолчанию. Не поддерживается сериализация: " + inputClass);
+        throw new SerializeException("Нужен конструктор по умолчанию. Не могу сеарилизовать: " + inputClass);
+    }
+
+    static void checkCircularReference(Field field, Class<?> inputClass){
+        Class<?> fieldClass = field.getType();
+        Field[] fieldsOfField = fieldClass.getDeclaredFields();
+        for(Field fieldOfField: fieldsOfField){
+            if(fieldOfField.getType().getCanonicalName().equals(inputClass.getCanonicalName())){
+                throw new SerializeException("Найдена циклическая ссылка");
+            }
+        }
     }
 
     static void detectFields(Class<?> inputClass, Collection<Serializer> serializers) {
@@ -44,6 +54,9 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
             if (Modifier.isStatic(modifier) || Modifier.isTransient(modifier)) {
                 continue;
             }
+            if(!field.getType().isPrimitive()){
+                checkCircularReference(field, inputClass);
+            }
             field.setAccessible(true);
             Serializer fieldExt = Serializer.of(field, cl);
             serializers.add(fieldExt);
@@ -51,7 +64,7 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
         detectFields(inputClass.getSuperclass(), serializers);
     }
 
-    final class RootSerializer<T> implements ClassSerializer<T> {
+    class RootSerializer<T> implements ClassSerializer<T> {
 
         private Constructor<T> constructor;
         private Collection<Serializer> serializers;
@@ -83,7 +96,7 @@ public interface ClassSerializer<T> extends Serializer<T, T> {
         }
     }
 
-    final class SerializableSerializer<T> implements ClassSerializer<T> {
+    class SerializableSerializer<T> implements ClassSerializer<T> {
 
         private Class<T> inputClass;
 

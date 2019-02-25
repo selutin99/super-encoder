@@ -27,6 +27,7 @@ public class SerializeService implements SuperEncoder {
         return externalizerMap.computeIfAbsent(inputClass, aClass -> Serializer.of(aClass));
     }
 
+    @Override
     public byte[] serialize(Object anyBean) {
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             this.serialize(anyBean, output);
@@ -40,7 +41,7 @@ public class SerializeService implements SuperEncoder {
     @Override
     public Object deserialize(byte[] data) {
         try (ByteArrayInputStream input = new ByteArrayInputStream(data)) {
-            return this.deserialize(input, getInputClass());
+            return this.deserialize(input);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,7 +60,7 @@ public class SerializeService implements SuperEncoder {
         }
     }
 
-    private <T> T deserialize(InputStream input, Class<T> clazz) {
+    private <T> T deserialize(InputStream input) {
         Serializer<T, T> serializer = of(getInputClass());
         try {
             try (ObjectInputStream objected = new ObjectInputStream(input)) {

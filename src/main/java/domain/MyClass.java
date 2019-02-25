@@ -1,11 +1,19 @@
 package domain;
 
+import java.math.BigInteger;
+
 public class MyClass{
     private int a;
     private long b;
 
-    public MyClass(){
+    private BigInteger bigInteger;
 
+    public BigInteger getBigInteger() {
+        return bigInteger;
+    }
+
+    public void setBigInteger(BigInteger bigInteger) {
+        this.bigInteger = bigInteger;
     }
 
     public int getA() {

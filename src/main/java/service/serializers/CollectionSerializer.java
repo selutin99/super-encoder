@@ -81,8 +81,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         protected abstract NullableArray getNullableArray(int size);
 
         @Override
-        protected void writeValue(Collection<V> collection, ObjectOutput out)
-                throws IOException, ReflectiveOperationException {
+        protected void writeValue(Collection<V> collection, ObjectOutput out) throws IOException, ReflectiveOperationException {
             NullableArray array = getNullableArray(collection.size());
             RoaringBitmap nullBitmap = new RoaringBitmap();
             int i = 0;
@@ -105,7 +104,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
                                                Collection<V> collection) throws IOException;
 
         @Override
-        final public Collection<V> readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
+        public Collection<V> readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
             if (!in.readBoolean()) {
                 return null;
             }
@@ -117,7 +116,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionLongSerializer<T> extends FieldCollectionSnappySerializer<T, Long> {
+    class FieldCollectionLongSerializer<T> extends FieldCollectionSnappySerializer<T, Long> {
 
         protected FieldCollectionLongSerializer(Field field, Class<? extends Collection<Long>> inputClass) {
             super(field, inputClass);
@@ -160,7 +159,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionIntegerSerializer<T> extends FieldCollectionSnappySerializer<T, Integer> {
+    class FieldCollectionIntegerSerializer<T> extends FieldCollectionSnappySerializer<T, Integer> {
 
         protected FieldCollectionIntegerSerializer(Field field, Class<? extends Collection<Integer>> inputClass) {
             super(field, inputClass);
@@ -203,7 +202,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionShortSerializer<T> extends FieldCollectionSnappySerializer<T, Short> {
+    class FieldCollectionShortSerializer<T> extends FieldCollectionSnappySerializer<T, Short> {
 
         protected FieldCollectionShortSerializer(Field field, Class<? extends Collection<Short>> inputClass) {
             super(field, inputClass);
@@ -246,7 +245,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionDoubleSerializer<T> extends FieldCollectionSnappySerializer<T, Double> {
+    class FieldCollectionDoubleSerializer<T> extends FieldCollectionSnappySerializer<T, Double> {
 
         protected FieldCollectionDoubleSerializer(Field field, Class<? extends Collection<Double>> inputClass) {
             super(field, inputClass);
@@ -289,7 +288,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionFloatSerializer<T> extends FieldCollectionSnappySerializer<T, Float> {
+    class FieldCollectionFloatSerializer<T> extends FieldCollectionSnappySerializer<T, Float> {
 
         protected FieldCollectionFloatSerializer(Field field, Class<? extends Collection<Float>> inputClass) {
             super(field, inputClass);
@@ -304,7 +303,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
             }
 
             @Override
-            final public void set(int i, Float value) {
+            public void set(int i, Float value) {
                 array[i] = value;
             }
 
@@ -326,13 +325,13 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
 
             float[] array = Snappy.uncompressFloatArray(bytes);
             int i = 0;
-            for (final float value : array) {
+            for (float value : array) {
                 collection.add(nullBitmap.contains(i++) ? null : value);
             }
         }
     }
 
-    final class FieldCollectionCharacterSerializer<T> extends FieldCollectionSnappySerializer<T, Character> {
+    class FieldCollectionCharacterSerializer<T> extends FieldCollectionSnappySerializer<T, Character> {
 
         protected FieldCollectionCharacterSerializer(Field field, Class<? extends Collection<Character>> inputClass) {
             super(field, inputClass);
@@ -347,7 +346,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
             }
 
             @Override
-            final public void set(int i, Character value) {
+            public void set(int i, Character value) {
                 array[i] = value;
             }
 
@@ -362,7 +361,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
             return new CharacterNullableArray(size);
         }
 
-        final protected void fillCollection(ObjectInput in, RoaringBitmap nullBitmap,
+        protected void fillCollection(ObjectInput in, RoaringBitmap nullBitmap,
                                             Collection<Character> collection) throws IOException {
             byte[] bytes = new byte[in.readInt()];
             in.readFully(bytes);
@@ -375,7 +374,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionByteSerializer<T> extends FieldCollectionSnappySerializer<T, Byte> {
+    class FieldCollectionByteSerializer<T> extends FieldCollectionSnappySerializer<T, Byte> {
 
         protected FieldCollectionByteSerializer(Field field, Class<? extends Collection<Byte>> inputClass) {
             super(field, inputClass);
@@ -405,7 +404,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
             return new ByteNullableArray(size);
         }
 
-        final protected void fillCollection(ObjectInput in, RoaringBitmap nullBitmap,
+        protected void fillCollection(ObjectInput in, RoaringBitmap nullBitmap,
                                             Collection<Byte> collection) throws IOException {
             byte[] bytes = new byte[in.readInt()];
             in.readFully(bytes);
@@ -418,7 +417,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionBooleanSerializer<T>
+    class FieldCollectionBooleanSerializer<T>
             extends FieldSerializer.FieldConstructorSerializer<T, Collection<Boolean>>
             implements CollectionSerializer<T, Collection<Boolean>> {
 
@@ -448,7 +447,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
 
         @Override
-        final public Collection<Boolean> readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
+        public Collection<Boolean> readObject(ObjectInput in) throws IOException, ReflectiveOperationException {
             if (!in.readBoolean()) {
                 return null;
             }
@@ -470,7 +469,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldCollectionSerializer<T> extends FieldSerializer.FieldConstructorSerializer<T, Collection<?>>
+    class FieldCollectionSerializer<T> extends FieldSerializer.FieldConstructorSerializer<T, Collection<?>>
             implements CollectionSerializer<T, Collection<?>> {
 
         protected Serializer<Object, ?> componentExternalizer;
@@ -502,7 +501,7 @@ public interface CollectionSerializer<T, V> extends Serializer<T, V> {
         }
     }
 
-    final class FieldMapSerializer<T> extends FieldSerializer.FieldConstructorSerializer<T, Map<?, ?>>
+    class FieldMapSerializer<T> extends FieldSerializer.FieldConstructorSerializer<T, Map<?, ?>>
             implements CollectionSerializer<T, Map<?, ?>> {
 
         private Serializer<Object, ?> keyExternalizer;

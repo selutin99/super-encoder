@@ -77,191 +77,182 @@ public interface LangSerializer<T, V> extends Serializer<T, V> {
         throw new SerializeException("Не поддерживается!");
     }
 
-    final class StringSerializer implements LangSerializer<String, String> {
+    class StringSerializer implements LangSerializer<String, String> {
 
-        static final StringSerializer INSTANCE = new StringSerializer();
+        static StringSerializer INSTANCE = new StringSerializer();
 
         @Override
-        final public void writeSerializer(String object, ObjectOutput out) throws IOException {
+        public void writeSerializer(String object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeUTF(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public String readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public String readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readUTF() : null;
         }
     }
 
-    final class LongSerializer implements LangSerializer<Long, Long> {
+    class LongSerializer implements LangSerializer<Long, Long> {
 
-        static final LongSerializer INSTANCE = new LongSerializer();
+        static LongSerializer INSTANCE = new LongSerializer();
 
         @Override
-        final public void writeSerializer(Long object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Long object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeLong(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Long readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public Long readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readLong() : null;
         }
     }
 
-    final class IntegerSerializer implements LangSerializer<Integer, Integer> {
+    class IntegerSerializer implements LangSerializer<Integer, Integer> {
 
-        static final IntegerSerializer INSTANCE = new IntegerSerializer();
+        static IntegerSerializer INSTANCE = new IntegerSerializer();
 
         @Override
-        final public void writeSerializer(Integer object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Integer object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeInt(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Integer readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
+        public Integer readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readInt() : null;
         }
     }
 
-    final class ShortSerializer implements LangSerializer<Short, Short> {
+    class ShortSerializer implements LangSerializer<Short, Short> {
 
-        static final ShortSerializer INSTANCE = new ShortSerializer();
+        static ShortSerializer INSTANCE = new ShortSerializer();
 
         @Override
-        final public void writeSerializer(Short object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Short object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeShort(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Short readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
+        public Short readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readShort() : null;
         }
     }
 
-    final class DoubleSerializer implements LangSerializer<Double, Double> {
+    class DoubleSerializer implements LangSerializer<Double, Double> {
 
-        static final DoubleSerializer INSTANCE = new DoubleSerializer();
+        static DoubleSerializer INSTANCE = new DoubleSerializer();
 
         @Override
-        final public void writeSerializer(Double object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Double object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeDouble(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Double readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
+        public Double readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readDouble() : null;
         }
     }
 
-    final class FloatSerializer implements LangSerializer<Float, Float> {
+    class FloatSerializer implements LangSerializer<Float, Float> {
 
-        static final FloatSerializer INSTANCE = new FloatSerializer();
+        static FloatSerializer INSTANCE = new FloatSerializer();
 
         @Override
-        final public void writeSerializer(Float object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Float object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeFloat(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Float readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public Float readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readFloat() : null;
         }
     }
 
-    final class ByteSerializer implements LangSerializer<Byte, Byte> {
+    class ByteSerializer implements LangSerializer<Byte, Byte> {
 
-        static final ByteSerializer INSTANCE = new ByteSerializer();
+        static ByteSerializer INSTANCE = new ByteSerializer();
 
         @Override
-        final public void writeSerializer(Byte object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Byte object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeByte(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Byte readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public Byte readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readByte() : null;
         }
     }
 
-    final class CharSerializer implements LangSerializer<Character, Character> {
+    class CharSerializer implements LangSerializer<Character, Character> {
 
-        static final CharSerializer INSTANCE = new CharSerializer();
+        static CharSerializer INSTANCE = new CharSerializer();
 
         @Override
-        final public void writeSerializer(Character object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Character object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeChar(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Character readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public Character readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readChar() : null;
         }
     }
 
-    final class BooleanSerializer implements LangSerializer<Boolean, Boolean> {
+    class BooleanSerializer implements LangSerializer<Boolean, Boolean> {
 
-        static final BooleanSerializer INSTANCE = new BooleanSerializer();
+        static BooleanSerializer INSTANCE = new BooleanSerializer();
 
         @Override
-        final public void writeSerializer(Boolean object, ObjectOutput out) throws IOException {
+        public void writeSerializer(Boolean object, ObjectOutput out) throws IOException {
             if (object != null) {
                 out.writeBoolean(true);
                 out.writeBoolean(object);
-            }
-            else {
+            } else {
                 out.writeBoolean(false);
             }
         }
 
         @Override
-        final public Boolean readObject(ObjectInput in) throws IOException, ClassNotFoundException {
+        public Boolean readObject(ObjectInput in) throws IOException, ClassNotFoundException {
             return in.readBoolean() ? in.readBoolean() : null;
         }
     }

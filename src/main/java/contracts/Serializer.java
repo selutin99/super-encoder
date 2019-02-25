@@ -27,13 +27,16 @@ public interface Serializer<T, V> {
                 return serializer;
             }
         }
-        if ((serializer = (Serializer<T, V>) CollectionSerializer.collection(field, inputClass)) != null){
+        if ((serializer = CollectionSerializer.collection(field, inputClass)) != null){
             return serializer;
         }
-        if ((serializer = (Serializer<T, V>) LangSerializer.lang(field, inputClass)) != null) {
+        if ((serializer = LangSerializer.lang(field, inputClass)) != null) {
             return serializer;
         }
-        if ((serializer = (Serializer<T, V>) TimeSerializer.time(field, inputClass)) != null) {
+        if ((serializer = TimeSerializer.time(field, inputClass)) != null) {
+            return serializer;
+        }
+        if ((serializer = BigIntegerSerializer.bigInt(field, inputClass)) != null) {
             return serializer;
         }
         return new FieldSerializer.FieldParentSerializer(field, ClassSerializer.of(inputClass));

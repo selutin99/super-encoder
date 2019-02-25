@@ -12,7 +12,7 @@ import java.time.Instant;
 public interface TimeSerializer<T, V> extends Serializer<T, V> {
 
     static <T, V> Serializer<T, V> time(Class<? extends T> inputClass) {
-        if (Instant.class.isAssignableFrom(inputClass)){
+        if (Instant.class.isAssignableFrom(inputClass)) {
             return (Serializer<T, V>) InstantSerializer.INSTANCE;
         }
         return null;
@@ -30,7 +30,7 @@ public interface TimeSerializer<T, V> extends Serializer<T, V> {
         throw new SerializeException("Не поддерживается");
     }
 
-    final class InstantSerializer implements TimeSerializer<Instant, Instant> {
+    class InstantSerializer implements TimeSerializer<Instant, Instant> {
 
         static InstantSerializer INSTANCE = new InstantSerializer();
 
